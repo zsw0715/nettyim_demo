@@ -22,4 +22,9 @@ public class LogoutResponseMessage extends AbstractResponseMessage {
         return MessageType.LOGOUT_RESPONSE_MESSAGE;
     }
 
+    @Override
+    public String toString() {
+        return "LogoutResponseMessage{username='" + username + "', timestamp='" + timestamp + "', success=" + isSuccess() + ", reason='" + getReason() + "'}";
+    }
+
 }

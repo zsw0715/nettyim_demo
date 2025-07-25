@@ -22,7 +22,6 @@ public class RegisterResponseMessage extends AbstractResponseMessage {
 
     @Override
     public String toString() {
-        return "RegisterResponseMessage{username='" + username + "', message='" + message + "'}";
+        return "RegisterResponseMessage{username='" + username + "', message='" + message + "', timestamp='" + timestamp + "', success=" + isSuccess() + ", reason='" + getReason() + "'}";
     }
-
 }

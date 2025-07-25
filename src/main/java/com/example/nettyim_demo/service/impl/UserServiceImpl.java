@@ -23,7 +23,7 @@ public class UserServiceImpl implements UserService {
         User user = new User();
         user.setUsername(username);
         user.setPassword(password);
-        user.setStatus(1);
+        user.setStatus(0);
         user.setCreate_time(LocalDateTime.now());
         return userMapper.insert(user) > 0;
     }
@@ -33,6 +33,7 @@ public class UserServiceImpl implements UserService {
         User user = userMapper.findByUsername(username);
         if (user != null && user.getPassword().equals(password)) {
             user.setLast_login_time(LocalDateTime.now());
+            user.setStatus(1); // 设置为在线状态
             userMapper.updateById(user);
             return user;
         }

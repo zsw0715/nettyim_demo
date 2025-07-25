@@ -44,26 +44,31 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
                     case "register":
                         if (parts.length == 3) {
                             ctx.writeAndFlush(new RegisterRequestMessage(parts[1], parts[2]));
+                            showMenu();
+                            printPrompt();
                         } else {
+                            showMenu();
                             System.out.println("注册命令格式错误，请使用: register <username> <password>");
+                            printPrompt(); 
                         }
-                        showMenu();
-                        printPrompt(); // 继续输入提示
                         break;
                     case "login":
                         if (parts.length == 3) {
                             ctx.writeAndFlush(new LoginRequestMessage(parts[1], parts[2],
                                     String.valueOf(System.currentTimeMillis())));
+                            showMenu();
+                            printPrompt(); 
                         } else {
+                            showMenu();
                             System.out.println("登录命令格式错误，请使用: login <username> <password>");
+                            printPrompt(); 
                         }
-                        showMenu();
-                        printPrompt(); // 继续输入提示
+
                         break;
                     default:
-                        System.out.println("未知命令，请重新输入！");
                         showMenu();
-                        printPrompt(); // 继续输入提示
+                        System.out.println("未知命令，请重新输入！");
+                        printPrompt();
                 }
             }
         }, "ConsoleInput").start();

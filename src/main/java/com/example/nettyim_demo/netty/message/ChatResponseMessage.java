@@ -26,4 +26,9 @@ public class ChatResponseMessage extends AbstractResponseMessage {
         return MessageType.CHAT_RESPONSE_MESSAGE;
     }
 
+    @Override
+    public String toString() {
+        return "ChatResponseMessage{sender='" + sender + "', receiver='" + receiver + "', message='" + message + "', timestamp='" + timestamp + "', success=" + isSuccess() + ", reason='" + getReason() + "'}";
+    }
+
 }

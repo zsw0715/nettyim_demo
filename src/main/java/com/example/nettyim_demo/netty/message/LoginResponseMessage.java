@@ -24,4 +24,9 @@ public class LoginResponseMessage extends AbstractResponseMessage {
         return MessageType.LOGIN_RESPONSE_MESSAGE;
     }
 
+    @Override
+    public String toString() {
+        return "LoginResponseMessage{username='" + username + "', timestamp='" + timestamp + "', success=" + isSuccess() + ", reason='" + getReason() + "'}";
+    }
+
 }
