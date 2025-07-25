@@ -1,6 +1,7 @@
 package com.example.nettyim_demo.netty.client.handler;
 
 import java.util.Scanner;
+// import java.util.concurrent.CountDownLatch;
 
 import com.example.nettyim_demo.netty.message.LoginRequestMessage;
 import com.example.nettyim_demo.netty.message.RegisterRequestMessage;
@@ -12,22 +13,29 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ClientHandler extends ChannelInboundHandlerAdapter {
 
+    // CountDownLatch latch = new CountDownLatch(1);
+
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         String response = msg.toString();
         log.debug("Received response from server: {}", response);
-        System.out.print(">>> ");
+
+        // 输出响应信息（可以改成更友好格式）
+        System.out.println(response);
+
+        // 显示下一轮输入提示
+        printPrompt();
     }
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-
-        // demo 阶段 控制台模拟一切请求
         new Thread(() -> {
             Scanner scanner = new Scanner(System.in);
+
+            showMenu();
+            printPrompt();
+
             while (true) {
-                showMenu();
-                // System.out.print(">>> ");
                 String command = scanner.nextLine();
                 String[] parts = command.trim().split(" ", 3);
                 String cmd = parts[0].toLowerCase();
@@ -35,29 +43,30 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
                 switch (cmd) {
                     case "register":
                         if (parts.length == 3) {
-                            String username = parts[1];
-                            String password = parts[2];
-                            ctx.writeAndFlush(new RegisterRequestMessage(username, password));
+                            ctx.writeAndFlush(new RegisterRequestMessage(parts[1], parts[2]));
                         } else {
                             System.out.println("注册命令格式错误，请使用: register <username> <password>");
                         }
+                        showMenu();
+                        printPrompt(); // 继续输入提示
                         break;
                     case "login":
                         if (parts.length == 3) {
-                            String username = parts[1];
-                            String password = parts[2];
-                            String timestamp = String.valueOf(System.currentTimeMillis());
-                            ctx.writeAndFlush(new LoginRequestMessage(username, password, timestamp));
+                            ctx.writeAndFlush(new LoginRequestMessage(parts[1], parts[2],
+                                    String.valueOf(System.currentTimeMillis())));
                         } else {
                             System.out.println("登录命令格式错误，请使用: login <username> <password>");
                         }
+                        showMenu();
+                        printPrompt(); // 继续输入提示
                         break;
                     default:
                         System.out.println("未知命令，请重新输入！");
+                        showMenu();
+                        printPrompt(); // 继续输入提示
                 }
             }
         }, "ConsoleInput").start();
-
     }
 
     @Override
@@ -74,22 +83,26 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
         System.out.println("│ ✨ 账户管理：                                 │");
         System.out.println("│   1. register <username> <password>  注册     │");
         System.out.println("│   2. login    <username> <password>  登录     │");
-        System.out.println("│   3. logout                         登出      │");
+        System.out.println("│   3. logout                          登出     │");
         System.out.println("├───────────────────────────────────────────────┤");
         System.out.println("│ 💬 单聊功能：                                 │");
-        System.out.println("│   4. send <to_user> <message>       发送消息  │");
+        System.out.println("│   4. send     <to_user> <message>   发送消息  │");
         System.out.println("├───────────────────────────────────────────────┤");
         System.out.println("│ 👥 群组功能：                                 │");
         System.out.println("│   5. gcreate  <group> <u1,u2,...>   创建群聊  │");
         System.out.println("│   6. gjoin    <group>               加入群聊  │");
-        System.out.println("│   7. gleave   <group>               退出群    │");
-        System.out.println("│   8. gsend    <group> <message>     群发息    │");
-        System.out.println("│   9. gmembers <group>               查看成员  │");
+        System.out.println("│   7. gleave   <group>               退出群聊 │");
+        System.out.println("│   8. gsend    <group> <message>     群发消息   │");
+        System.out.println("│   9. gmembers <group>               查看群成员 │");
         System.out.println("├───────────────────────────────────────────────┤");
         System.out.println("│ ❌ 系统命令：                                 │");
         System.out.println("│  10. quit                           退出客户端│");
         System.out.println("└───────────────────────────────────────────────┘");
         System.out.println(">>> 请输入命令: ");
+    }
+
+    private void printPrompt() {
+        System.out.print(">>> ");
     }
 
 }
