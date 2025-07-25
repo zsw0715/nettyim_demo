@@ -107,9 +107,9 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
         System.out.println("│ 👥 群组功能：                                 │");
         System.out.println("│   5. gcreate  <group> <u1,u2,...>   创建群聊  │");
         System.out.println("│   6. gjoin    <group>               加入群聊  │");
-        System.out.println("│   7. gleave   <group>               退出群聊 │");
-        System.out.println("│   8. gsend    <group> <message>     群发消息   │");
-        System.out.println("│   9. gmembers <group>               查看群成员 │");
+        System.out.println("│   7. gleave   <group>               退出群聊  │");
+        System.out.println("│   8. gsend    <group> <message>     群发消息  │");
+        System.out.println("│   9. gmembers <group>               查看群成员│");
         System.out.println("├───────────────────────────────────────────────┤");
         System.out.println("│ ❌ 系统命令：                                 │");
         System.out.println("│  10. quit                           退出客户端│");
