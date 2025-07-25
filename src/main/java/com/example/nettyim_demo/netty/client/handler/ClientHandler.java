@@ -78,15 +78,15 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
                         }
                         break;
                     case "send":
-                        if (parts.length == 3) {
+                        if (parts.length < 3) {
+                            showMenu();
+                            System.out.println("发送消息命令格式错误，请使用: send <to_user> <message>");
+                            printPrompt();
+                        } else {
                             String toUser = parts[1];
                             String message = parts[2];
                             ctx.writeAndFlush(new ChatRequestMessage(toUser, message));
                             showMenu();
-                            printPrompt();
-                        } else {
-                            showMenu();
-                            System.out.println("发送消息命令格式错误，请使用: send <to_user> <message>");
                             printPrompt();
                         }
                         break;
