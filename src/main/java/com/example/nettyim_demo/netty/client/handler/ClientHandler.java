@@ -4,6 +4,7 @@ import java.util.Scanner;
 // import java.util.concurrent.CountDownLatch;
 
 import com.example.nettyim_demo.netty.message.LoginRequestMessage;
+import com.example.nettyim_demo.netty.message.LogoutRequestMessage;
 import com.example.nettyim_demo.netty.message.RegisterRequestMessage;
 
 import io.netty.channel.ChannelHandlerContext;
@@ -63,7 +64,17 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
                             System.out.println("登录命令格式错误，请使用: login <username> <password>");
                             printPrompt(); 
                         }
-
+                        break;
+                    case "logout":
+                        if (parts.length == 2) {
+                            ctx.writeAndFlush(new LogoutRequestMessage(parts[1]));
+                            showMenu();
+                            printPrompt(); 
+                        } else {
+                            showMenu();
+                            System.out.println("登出命令格式错误，请使用: logout <username>");
+                            printPrompt(); 
+                        }
                         break;
                     default:
                         showMenu();
@@ -88,7 +99,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
         System.out.println("│ ✨ 账户管理：                                 │");
         System.out.println("│   1. register <username> <password>  注册     │");
         System.out.println("│   2. login    <username> <password>  登录     │");
-        System.out.println("│   3. logout                          登出     │");
+        System.out.println("│   3. logout   <username>             登出     │");
         System.out.println("├───────────────────────────────────────────────┤");
         System.out.println("│ 💬 单聊功能：                                 │");
         System.out.println("│   4. send     <to_user> <message>   发送消息  │");

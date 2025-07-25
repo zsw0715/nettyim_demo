@@ -23,6 +23,14 @@ public interface UserService {
     User login(String username, String password);
 
     /**
+     * 用户登出
+     * 
+     * @param username 用户名
+     * @return 是否登出成功
+     */
+    boolean logout(String username);
+
+    /**
      * 更新用户信息
      * 
      * @param user 用户信息

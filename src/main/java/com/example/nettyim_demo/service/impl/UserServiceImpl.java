@@ -41,6 +41,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public boolean logout(String username) {
+        User user = userMapper.findByUsername(username);
+        if (user != null) {
+            user.setStatus(0); // 设置为离线状态
+            userMapper.updateById(user);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public boolean updateUser(User user) {
         return userMapper.updateById(user) > 0;
     }

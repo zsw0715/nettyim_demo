@@ -3,6 +3,7 @@ package com.example.nettyim_demo.netty.server;
 import com.example.nettyim_demo.netty.protocol.MessageCodecSharable;
 import com.example.nettyim_demo.netty.protocol.ProtocolFramerDecoder;
 import com.example.nettyim_demo.netty.server.handler.LoginRequestMessageHandler;
+import com.example.nettyim_demo.netty.server.handler.LogoutRequestMessageHandler;
 import com.example.nettyim_demo.netty.server.handler.RegisterRequestMessageHandler;
 
 import io.netty.bootstrap.ServerBootstrap;
@@ -40,6 +41,7 @@ public class NettyServer {
                             // Add other handlers as needed, e.g., for login, message handling, etc.
                             ch.pipeline().addLast(new RegisterRequestMessageHandler());
                             ch.pipeline().addLast(new LoginRequestMessageHandler());
+                            ch.pipeline().addLast(new LogoutRequestMessageHandler());
                         }
                     });
             ChannelFuture channelFuture = serverBootstrap.bind(8090).sync();
