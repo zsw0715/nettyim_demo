@@ -1,6 +1,6 @@
 package com.example.nettyim_demo.netty.server.handler;
 
-import com.example.nettyim_demo.entity.User;
+// import com.example.nettyim_demo.entity.User;
 import com.example.nettyim_demo.netty.message.ChatRequestMessage;
 import com.example.nettyim_demo.netty.message.ChatResponseMessage;
 import com.example.nettyim_demo.netty.server.session.SessionFactory;
