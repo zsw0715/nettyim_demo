@@ -1,14 +1,12 @@
 package com.example.nettyim_demo.netty.server;
 
-import com.example.nettyim_demo.netty.message.LoginRequestMessage;
 import com.example.nettyim_demo.netty.protocol.MessageCodecSharable;
 import com.example.nettyim_demo.netty.protocol.ProtocolFramerDecoder;
+import com.example.nettyim_demo.netty.server.handler.LoginRequestMessageHandler;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
-import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -39,14 +37,7 @@ public class NettyServer {
                             ch.pipeline().addLast(LOGGING_HANDLER);
                             ch.pipeline().addLast(MESSAGE_CODEC);
                             // Add other handlers as needed, e.g., for login, message handling, etc.
-                            ch.pipeline().addLast(new SimpleChannelInboundHandler<LoginRequestMessage>() {
-
-                                @Override
-                                protected void channelRead0(ChannelHandlerContext ctx, LoginRequestMessage msg) throws Exception {
-                                    log.debug("Received LoginRequestMessage: {}", msg);
-                                }
-
-                            });
+                            ch.pipeline().addLast(new LoginRequestMessageHandler());
                         }
                     });
             ChannelFuture channelFuture = serverBootstrap.bind(8080).sync();

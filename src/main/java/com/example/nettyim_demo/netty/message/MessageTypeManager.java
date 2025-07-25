@@ -7,6 +7,8 @@ public class MessageTypeManager {
     private static final Map<Integer, Class<? extends Message>> messageTypeMap = new HashMap<>();
 
     static {
+        messageTypeMap.put(MessageType.REGISTER_REQUEST_MESSAGE, RegisterRequestMessage.class);
+        messageTypeMap.put(MessageType.REGISTER_RESPONSE_MESSAGE, RegisterResponseMessage.class);
         messageTypeMap.put(MessageType.LOGIN_REQUEST_MESSAGE, LoginRequestMessage.class);
         messageTypeMap.put(MessageType.LOGIN_RESPONSE_MESSAGE, LoginResponseMessage.class);
         messageTypeMap.put(MessageType.LOGOUT_REQUEST_MESSAGE, LogoutRequestMessage.class);

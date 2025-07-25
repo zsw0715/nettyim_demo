@@ -1,13 +1,11 @@
 package com.example.nettyim_demo.netty.client;
 
-import com.example.nettyim_demo.netty.message.LoginRequestMessage;
+import com.example.nettyim_demo.netty.client.handler.ClientHandler;
 import com.example.nettyim_demo.netty.protocol.MessageCodecSharable;
 import com.example.nettyim_demo.netty.protocol.ProtocolFramerDecoder;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -37,18 +35,7 @@ public class NettyClient {
                             ch.pipeline().addLast(LOGGING_HANDLER);
                             ch.pipeline().addLast(MESSAGE_CODEC);
                             // Add other handlers as needed, e.g., for login, message handling, etc.
-                            ch.pipeline().addLast(new ChannelInboundHandlerAdapter() {
-
-                                @Override
-                                public void channelActive(ChannelHandlerContext ctx) throws Exception {
-                                    log.debug("Netty Client connected to server...");
-
-                                    // 给服务器发送登录请求消息
-                                    LoginRequestMessage loginRequest = new LoginRequestMessage("user1", "password123", "2023-10-01T12:00:00Z");
-                                    ctx.writeAndFlush(loginRequest);
-                                }
-
-                            });
+                            ch.pipeline().addLast("ClientHandler", new ClientHandler());
                         }
                     });
             ChannelFuture channelFuture = bootstrap.connect("localhost", 8080).sync();
