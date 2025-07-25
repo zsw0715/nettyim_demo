@@ -1,8 +1,14 @@
 package com.example.nettyim_demo.netty.server;
 
+import com.example.nettyim_demo.netty.message.LoginRequestMessage;
+import com.example.nettyim_demo.netty.protocol.MessageCodecSharable;
+import com.example.nettyim_demo.netty.protocol.ProtocolFramerDecoder;
+
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
+import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -12,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class NettyServer {
-    
+
     public static void main(String[] args) {
         new NettyServer().start();
     }
@@ -21,6 +27,7 @@ public class NettyServer {
         NioEventLoopGroup bossGroup = new NioEventLoopGroup();
         NioEventLoopGroup workerGroup = new NioEventLoopGroup();
         LoggingHandler LOGGING_HANDLER = new LoggingHandler(LogLevel.DEBUG);
+        MessageCodecSharable MESSAGE_CODEC = new MessageCodecSharable();
         try {
             ServerBootstrap serverBootstrap = new ServerBootstrap()
                     .group(bossGroup, workerGroup)
@@ -28,7 +35,18 @@ public class NettyServer {
                     .childHandler(new ChannelInitializer<NioSocketChannel>() {
                         @Override
                         protected void initChannel(NioSocketChannel ch) throws Exception {
+                            ch.pipeline().addLast(new ProtocolFramerDecoder());
                             ch.pipeline().addLast(LOGGING_HANDLER);
+                            ch.pipeline().addLast(MESSAGE_CODEC);
+                            // Add other handlers as needed, e.g., for login, message handling, etc.
+                            ch.pipeline().addLast(new SimpleChannelInboundHandler<LoginRequestMessage>() {
+
+                                @Override
+                                protected void channelRead0(ChannelHandlerContext ctx, LoginRequestMessage msg) throws Exception {
+                                    log.debug("Received LoginRequestMessage: {}", msg);
+                                }
+
+                            });
                         }
                     });
             ChannelFuture channelFuture = serverBootstrap.bind(8080).sync();

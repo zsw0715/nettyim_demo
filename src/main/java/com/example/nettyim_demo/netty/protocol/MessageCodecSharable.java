@@ -8,6 +8,7 @@ import com.example.nettyim_demo.netty.message.MessageTypeManager;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageCodec;
+import io.netty.channel.ChannelHandler;
 
 /**
  * 自定义协议消息结构类，用于 Netty 通信中定义消息格式。
@@ -24,6 +25,7 @@ import io.netty.handler.codec.MessageToMessageCodec;
  *
  * 本类将配合编码器/解码器（如 MessageCodec）进行编解码处理，作为 Netty 中消息传输的基础结构。
  */
+@ChannelHandler.Sharable
 public class MessageCodecSharable extends MessageToMessageCodec<ByteBuf, Message> {
 
     private static final int MAGIC_NUMBER = 0x20040715; // 魔数，用于标识协议包
