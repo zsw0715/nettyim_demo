@@ -32,14 +32,14 @@ public class NettyClient {
                         @Override
                         protected void initChannel(NioSocketChannel ch) throws Exception {
                             ch.pipeline().addLast(new ProtocolFramerDecoder());
-                            ch.pipeline().addLast(LOGGING_HANDLER);
+                            // ch.pipeline().addLast(LOGGING_HANDLER);
                             ch.pipeline().addLast(MESSAGE_CODEC);
                             // Add other handlers as needed, e.g., for login, message handling, etc.
                             ch.pipeline().addLast("ClientHandler", new ClientHandler());
                         }
                     });
-            ChannelFuture channelFuture = bootstrap.connect("localhost", 8080).sync();
-            log.debug("Netty Client connected to server on port 8080...");
+            ChannelFuture channelFuture = bootstrap.connect("localhost", 8090).sync();
+            log.debug("Netty Client connected to server on port 8090...");
             channelFuture.channel().closeFuture().sync();
         } catch (Exception e) {
             log.debug("Error With Netty Client: {}", e.getMessage());

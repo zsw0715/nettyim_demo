@@ -3,6 +3,7 @@ package com.example.nettyim_demo.netty.server;
 import com.example.nettyim_demo.netty.protocol.MessageCodecSharable;
 import com.example.nettyim_demo.netty.protocol.ProtocolFramerDecoder;
 import com.example.nettyim_demo.netty.server.handler.LoginRequestMessageHandler;
+import com.example.nettyim_demo.netty.server.handler.RegisterRequestMessageHandler;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -21,7 +22,7 @@ public class NettyServer {
         new NettyServer().start();
     }
 
-    void start() {
+    public void start() {
         NioEventLoopGroup bossGroup = new NioEventLoopGroup();
         NioEventLoopGroup workerGroup = new NioEventLoopGroup();
         LoggingHandler LOGGING_HANDLER = new LoggingHandler(LogLevel.DEBUG);
@@ -34,14 +35,15 @@ public class NettyServer {
                         @Override
                         protected void initChannel(NioSocketChannel ch) throws Exception {
                             ch.pipeline().addLast(new ProtocolFramerDecoder());
-                            ch.pipeline().addLast(LOGGING_HANDLER);
+                            // ch.pipeline().addLast(LOGGING_HANDLER);
                             ch.pipeline().addLast(MESSAGE_CODEC);
                             // Add other handlers as needed, e.g., for login, message handling, etc.
+                            ch.pipeline().addLast(new RegisterRequestMessageHandler());
                             ch.pipeline().addLast(new LoginRequestMessageHandler());
                         }
                     });
-            ChannelFuture channelFuture = serverBootstrap.bind(8080).sync();
-            log.debug("Netty Server started on port 8080...");
+            ChannelFuture channelFuture = serverBootstrap.bind(8090).sync();
+            log.debug("Netty Server started on port 8090...");
             channelFuture.channel().closeFuture().sync();
         } catch (Exception e) {
             log.debug("Error With Netty Server: {}", e.getMessage());

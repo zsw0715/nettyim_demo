@@ -3,6 +3,7 @@ package com.example.nettyim_demo.netty.client.handler;
 import java.util.Scanner;
 
 import com.example.nettyim_demo.netty.message.LoginRequestMessage;
+import com.example.nettyim_demo.netty.message.RegisterRequestMessage;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -10,6 +11,12 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class ClientHandler extends ChannelInboundHandlerAdapter {
+
+    @Override
+    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+        String response = msg.toString();
+        log.debug("Received response from server: {}", response);
+    }
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
@@ -25,6 +32,15 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
                 String cmd = parts[0].toLowerCase();
 
                 switch (cmd) {
+                    case "register":
+                        if (parts.length == 3) {
+                            String username = parts[1];
+                            String password = parts[2];
+                            ctx.writeAndFlush(new RegisterRequestMessage(username, password));
+                        } else {
+                            System.out.println("注册命令格式错误，请使用: register <username> <password>");
+                        }
+                        break;
                     case "login":
                         if (parts.length == 3) {
                             String username = parts[1];
@@ -52,26 +68,27 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
     private void showMenu() {
         System.out.println("\n");
         System.out.println("┌───────────────────────────────────────────────┐");
-        System.out.println("│           🌐 Netty IM Client v1.0              │");
+        System.out.println("│             🌐 Netty IM Client v1.0            │");
         System.out.println("├───────────────────────────────────────────────┤");
         System.out.println("│ ✨ 账户管理：                                    │");
-        System.out.println("│   1. login <username> <password>    登录         │");
-        System.out.println("│   2. logout                         登出         │");
+        System.out.println("│   1. register <username> <password>  注册       │");
+        System.out.println("│   2. login    <username> <password>  登录       │");
+        System.out.println("│   3. logout                         登出        │");
         System.out.println("├───────────────────────────────────────────────┤");
         System.out.println("│ 💬 单聊功能：                                    │");
-        System.out.println("│   3. send <to_user> <message>       发送消息     │");
+        System.out.println("│   4. send <to_user> <message>       发送消息     │");
         System.out.println("├───────────────────────────────────────────────┤");
         System.out.println("│ 👥 群组功能：                                    │");
-        System.out.println("│   4. gcreate <group> <u1,u2,...>    创建群聊     │");
-        System.out.println("│   5. gjoin <group>                  加入群聊     │");
-        System.out.println("│   6. gleave <group>                 退出群聊     │");
-        System.out.println("│   7. gsend <group> <message>        群发消息     │");
-        System.out.println("│   8. gmembers <group>               查看成员     │");
+        System.out.println("│   5. gcreate  <group> <u1,u2,...>   创建群聊     │");
+        System.out.println("│   6. gjoin    <group>               加入群聊     │");
+        System.out.println("│   7. gleave   <group>               退出群聊     │");
+        System.out.println("│   8. gsend    <group> <message>     群发消息     │");
+        System.out.println("│   9. gmembers <group>               查看成员     │");
         System.out.println("├───────────────────────────────────────────────┤");
         System.out.println("│ ❌ 系统命令：                                    │");
-        System.out.println("│   9. quit                           退出客户端   │");
+        System.out.println("│  10. quit                           退出客户端   │");
         System.out.println("└───────────────────────────────────────────────┘");
-        System.out.print(">>> 请输入命令: ");
+        System.out.println(">>> 请输入命令: ");
     }
 
 }

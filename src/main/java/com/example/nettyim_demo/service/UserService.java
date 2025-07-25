@@ -46,4 +46,11 @@ public interface UserService {
      */
     User findByUsername(String username);
 
+    /**
+     * 删除所有用户
+     * 
+     * @return 是否删除成功
+     */
+    boolean deleteAllUsers();
+
 }

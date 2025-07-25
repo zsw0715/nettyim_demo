@@ -42,4 +42,10 @@ public class UserServiceTest {
         assertTrue(result, "User deletion should be successful");
     }
 
+    @Test
+    public void testDeleteAllUsers() {
+        boolean result = userService.deleteAllUsers();
+        assertTrue(result, "All users deletion should be successful");
+    }
+
 }

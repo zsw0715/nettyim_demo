@@ -53,5 +53,10 @@ public class UserServiceImpl implements UserService {
     public User findByUsername(String username) {
         return userMapper.findByUsername(username);
     }
+
+    @Override
+    public boolean deleteAllUsers() {
+        return userMapper.deleteAll() > 0;
+    }
     
 }

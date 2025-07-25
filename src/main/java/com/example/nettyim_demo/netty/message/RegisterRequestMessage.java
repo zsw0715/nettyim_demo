@@ -8,7 +8,7 @@ import lombok.Data;
 public class RegisterRequestMessage extends Message {
     private String username;
     private String password;
-    private String timestamp; // 注册时间戳
+    // private String timestamp; // 注册时间戳
 
     @Override
     public int getMessageType() {
@@ -17,7 +17,7 @@ public class RegisterRequestMessage extends Message {
 
     @Override
     public String toString() {
-        return "RegisterRequestMessage{username='" + username + "', password=***, timestamp='" + timestamp + "'}";
+        return "RegisterRequestMessage{username='" + username + "', password=***}";
     }
 
 }
