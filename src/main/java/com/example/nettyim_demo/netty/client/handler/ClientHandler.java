@@ -105,6 +105,12 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
         ctx.close();
     }
 
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        log.debug("Channel inactive, closing connection.");
+        ctx.close();
+    }
+
     private void showMenu() {
         System.out.println("\n");
         System.out.println("┌───────────────────────────────────────────────┐");
