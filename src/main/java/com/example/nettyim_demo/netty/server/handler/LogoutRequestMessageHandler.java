@@ -2,6 +2,7 @@ package com.example.nettyim_demo.netty.server.handler;
 
 import com.example.nettyim_demo.netty.message.LogoutRequestMessage;
 import com.example.nettyim_demo.netty.message.LogoutResponseMessage;
+import com.example.nettyim_demo.netty.server.session.SessionFactory;
 import com.example.nettyim_demo.service.UserService;
 import com.example.nettyim_demo.util.SpringContextUtils;
 
@@ -20,6 +21,8 @@ public class LogoutRequestMessageHandler extends SimpleChannelInboundHandler<Log
         boolean success = userService.logout(username);
 
         if (success) {
+            // 解绑用户会话
+            SessionFactory.getSession().unbind(ctx.channel());
             log.debug("User logged out successfully: {}", username);
             ctx.writeAndFlush(new LogoutResponseMessage(true, "登出成功", username, String.valueOf(System.currentTimeMillis())));
         } else {

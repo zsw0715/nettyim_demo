@@ -1,6 +1,6 @@
 package com.example.nettyim_demo.netty.server.session;
 
-import java.nio.channels.Channel;
+import io.netty.channel.Channel;
 
 /**
  * 接口 Session 定义了会话的基本操作

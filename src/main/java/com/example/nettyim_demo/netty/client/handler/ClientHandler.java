@@ -3,6 +3,7 @@ package com.example.nettyim_demo.netty.client.handler;
 import java.util.Scanner;
 // import java.util.concurrent.CountDownLatch;
 
+import com.example.nettyim_demo.netty.message.ChatRequestMessage;
 import com.example.nettyim_demo.netty.message.LoginRequestMessage;
 import com.example.nettyim_demo.netty.message.LogoutRequestMessage;
 import com.example.nettyim_demo.netty.message.RegisterRequestMessage;
@@ -50,7 +51,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
                         } else {
                             showMenu();
                             System.out.println("注册命令格式错误，请使用: register <username> <password>");
-                            printPrompt(); 
+                            printPrompt();
                         }
                         break;
                     case "login":
@@ -58,22 +59,33 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
                             ctx.writeAndFlush(new LoginRequestMessage(parts[1], parts[2],
                                     String.valueOf(System.currentTimeMillis())));
                             showMenu();
-                            printPrompt(); 
+                            printPrompt();
                         } else {
                             showMenu();
                             System.out.println("登录命令格式错误，请使用: login <username> <password>");
-                            printPrompt(); 
+                            printPrompt();
                         }
                         break;
                     case "logout":
                         if (parts.length == 2) {
                             ctx.writeAndFlush(new LogoutRequestMessage(parts[1]));
                             showMenu();
-                            printPrompt(); 
+                            printPrompt();
                         } else {
                             showMenu();
                             System.out.println("登出命令格式错误，请使用: logout <username>");
-                            printPrompt(); 
+                            printPrompt();
+                        }
+                        break;
+                    case "send":
+                        if (parts.length == 3) {
+                            String toUser = parts[1];
+                            String message = parts[2];
+                            ctx.writeAndFlush(new ChatRequestMessage(toUser, message));
+                        } else {
+                            showMenu();
+                            System.out.println("发送消息命令格式错误，请使用: send <to_user> <message>");
+                            printPrompt();
                         }
                         break;
                     default:

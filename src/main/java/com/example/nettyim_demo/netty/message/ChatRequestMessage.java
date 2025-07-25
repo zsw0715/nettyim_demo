@@ -6,10 +6,10 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class ChatRequestMessage extends Message {
-    private String senderId; // 发送者
-    private String receiverId;   // 接收者
+    // private String sender; // 发送者
+    private String receiver;   // 接收者
     private String content; // 消息内容
-    private String timestamp;
+    // private String timestamp;
 
     @Override
     public int getMessageType() {

@@ -15,11 +15,11 @@ public class ChatMessage {
     @TableId(type = IdType.AUTO)
     private Long cid;
 
-    @TableField("sender_id")
-    private Long senderId;
+    @TableField("sender")
+    private String sender;  // 发送者名字 是唯一键
 
-    @TableField("receiver_id")
-    private Long receiverId;
+    @TableField("receiver")
+    private String receiver;  // 接收者名字
 
     private String content;
 

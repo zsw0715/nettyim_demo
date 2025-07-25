@@ -1,6 +1,6 @@
 package com.example.nettyim_demo.netty.server.session.impl;
 
-import java.nio.channels.Channel;
+import io.netty.channel.Channel;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 

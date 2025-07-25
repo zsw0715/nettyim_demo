@@ -4,6 +4,7 @@ package com.example.nettyim_demo.netty.server.handler;
 import com.example.nettyim_demo.entity.User;
 import com.example.nettyim_demo.netty.message.LoginRequestMessage;
 import com.example.nettyim_demo.netty.message.LoginResponseMessage;
+import com.example.nettyim_demo.netty.server.session.SessionFactory;
 import com.example.nettyim_demo.service.UserService;
 import com.example.nettyim_demo.util.SpringContextUtils;
 
@@ -23,6 +24,8 @@ public class LoginRequestMessageHandler extends SimpleChannelInboundHandler<Logi
 
         User user = userService.login(username, password);
         if (user != null) {
+            // 绑定用户会话
+            SessionFactory.getSession().bind(ctx.channel(), username);
             log.debug("User logged in successfully: {}", username);
             ctx.writeAndFlush(new LoginResponseMessage(true, "登录成功", 
                     user.getUsername(), String.valueOf(System.currentTimeMillis())));
