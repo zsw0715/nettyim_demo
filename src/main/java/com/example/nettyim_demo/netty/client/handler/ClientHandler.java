@@ -16,6 +16,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         String response = msg.toString();
         log.debug("Received response from server: {}", response);
+        System.out.print(">>> ");
     }
 
     @Override
@@ -26,7 +27,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
             Scanner scanner = new Scanner(System.in);
             while (true) {
                 showMenu();
-                System.out.print(">>> ");
+                // System.out.print(">>> ");
                 String command = scanner.nextLine();
                 String[] parts = command.trim().split(" ", 3);
                 String cmd = parts[0].toLowerCase();
@@ -68,25 +69,25 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
     private void showMenu() {
         System.out.println("\n");
         System.out.println("┌───────────────────────────────────────────────┐");
-        System.out.println("│             🌐 Netty IM Client v1.0            │");
+        System.out.println("│             🌐 Netty IM Client v1.0           │");
         System.out.println("├───────────────────────────────────────────────┤");
-        System.out.println("│ ✨ 账户管理：                                    │");
-        System.out.println("│   1. register <username> <password>  注册       │");
-        System.out.println("│   2. login    <username> <password>  登录       │");
-        System.out.println("│   3. logout                         登出        │");
+        System.out.println("│ ✨ 账户管理：                                 │");
+        System.out.println("│   1. register <username> <password>  注册     │");
+        System.out.println("│   2. login    <username> <password>  登录     │");
+        System.out.println("│   3. logout                         登出      │");
         System.out.println("├───────────────────────────────────────────────┤");
-        System.out.println("│ 💬 单聊功能：                                    │");
-        System.out.println("│   4. send <to_user> <message>       发送消息     │");
+        System.out.println("│ 💬 单聊功能：                                 │");
+        System.out.println("│   4. send <to_user> <message>       发送消息  │");
         System.out.println("├───────────────────────────────────────────────┤");
-        System.out.println("│ 👥 群组功能：                                    │");
-        System.out.println("│   5. gcreate  <group> <u1,u2,...>   创建群聊     │");
-        System.out.println("│   6. gjoin    <group>               加入群聊     │");
-        System.out.println("│   7. gleave   <group>               退出群聊     │");
-        System.out.println("│   8. gsend    <group> <message>     群发消息     │");
-        System.out.println("│   9. gmembers <group>               查看成员     │");
+        System.out.println("│ 👥 群组功能：                                 │");
+        System.out.println("│   5. gcreate  <group> <u1,u2,...>   创建群聊  │");
+        System.out.println("│   6. gjoin    <group>               加入群聊  │");
+        System.out.println("│   7. gleave   <group>               退出群    │");
+        System.out.println("│   8. gsend    <group> <message>     群发息    │");
+        System.out.println("│   9. gmembers <group>               查看成员  │");
         System.out.println("├───────────────────────────────────────────────┤");
-        System.out.println("│ ❌ 系统命令：                                    │");
-        System.out.println("│  10. quit                           退出客户端   │");
+        System.out.println("│ ❌ 系统命令：                                 │");
+        System.out.println("│  10. quit                           退出客户端│");
         System.out.println("└───────────────────────────────────────────────┘");
         System.out.println(">>> 请输入命令: ");
     }
