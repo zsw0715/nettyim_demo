@@ -43,6 +43,8 @@ public class MessageCodecSharable extends MessageToMessageCodec<ByteBuf, Message
         buf.writeByte(msg.getMessageType());
         // 请求序号 4 字节
         buf.writeInt(msg.getSequenceId());
+        // 填充 1 字节，保留位
+        buf.writeByte(0); // 保留位，未来可扩展
         // 序列化消息体
         byte[] bytes = Serializer.Algorithm.JAVA.serialize(msg);
         // 消息体长度 4 字节
@@ -65,6 +67,8 @@ public class MessageCodecSharable extends MessageToMessageCodec<ByteBuf, Message
         byte messageType = buf.readByte();
         // 请求序号
         int sequenceId = buf.readInt();
+        // 保留位
+        byte reserved = buf.readByte();
         // 消息体长度
         int length = buf.readInt();
         // 消息体内容
