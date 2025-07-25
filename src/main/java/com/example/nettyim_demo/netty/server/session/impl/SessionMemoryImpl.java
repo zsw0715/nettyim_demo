@@ -1,51 +1,78 @@
 package com.example.nettyim_demo.netty.server.session.impl;
 
 import java.nio.channels.Channel;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.example.nettyim_demo.netty.server.session.Session;
 
 public class SessionMemoryImpl implements Session {
 
+    private static final Map<Channel, String> channelUsernameMap = new ConcurrentHashMap<>();
+    private static final Map<String, Channel> usernameChannelMap = new ConcurrentHashMap<>();
+    private static final Map<Channel, Map<String, Object>> channelAttributesMap = new ConcurrentHashMap<>();
+
     @Override
     public void bind(Channel channel, String username) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'bind'");
+        if (channel == null || username == null || username.isEmpty()) {
+            throw new IllegalArgumentException("Channel and username must not be null or empty");
+        }
+        channelUsernameMap.put(channel, username);
+        usernameChannelMap.put(username, channel);
+        channelAttributesMap.put(channel, new ConcurrentHashMap<>());
     }
 
     @Override
     public void unbind(Channel channel) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'unbind'");
+        if (channel == null) {
+            throw new IllegalArgumentException("Channel must not be null");
+        }
+        String username = channelUsernameMap.remove(channel);
+        if (username != null) {
+            usernameChannelMap.remove(username);
+        }
+        channelAttributesMap.remove(channel);
     }
+
 
     @Override
     public String getUsername(Channel channel) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getUsername'");
+        if (channel == null) {
+            throw new IllegalArgumentException("Channel must not be null");
+        }
+        return channelUsernameMap.get(channel);
     }
 
     @Override
     public Channel getChannel(String username) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getChannel'");
+        if (username == null || username.isEmpty()) {
+            throw new IllegalArgumentException("Username must not be null or empty");
+        }
+        return usernameChannelMap.get(username);
     }
 
     @Override
     public void setAttribute(Channel channel, String key, Object value) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setAttribute'");
+        if (channel == null || key == null || key.isEmpty()) {
+            throw new IllegalArgumentException("Channel and key must not be null or empty");
+        }
+        channelAttributesMap.computeIfAbsent(channel, k -> new ConcurrentHashMap<>()).put(key, value);
     }
 
     @Override
     public Object getAttribute(Channel channel, String key) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getAttribute'");
+        if (channel == null || key == null || key.isEmpty()) {
+            throw new IllegalArgumentException("Channel and key must not be null or empty");
+        }
+        return channelAttributesMap.getOrDefault(channel, new ConcurrentHashMap<>()).get(key);
     }
 
     @Override
     public boolean isLogin(Channel channel) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'isLogin'");
+        if (channel == null) {
+            throw new IllegalArgumentException("Channel must not be null");
+        }
+        return channelUsernameMap.containsKey(channel);
     }
     
 }
