@@ -11,6 +11,7 @@ import com.example.nettyim_demo.netty.client.session.ClientSession;
 import com.example.nettyim_demo.netty.message.ChatRequestMessage;
 import com.example.nettyim_demo.netty.message.GroupChatRequestMessage;
 import com.example.nettyim_demo.netty.message.GroupCreateRequestMessage;
+import com.example.nettyim_demo.netty.message.GroupJoinRequestMessage;
 import com.example.nettyim_demo.netty.message.GroupListRequestMessage;
 import com.example.nettyim_demo.netty.message.GroupMemberListRequestMessage;
 import com.example.nettyim_demo.netty.message.LoginRequestMessage;
@@ -165,6 +166,18 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
                             log.debug("Sending group message to '{}' from '{}': {}", groupName, username, message);
                             ctx.writeAndFlush(new GroupChatRequestMessage(username, groupName, message));
                             showMenu();
+                            printPrompt();
+                        }
+                        break;
+                    case "gjoin":
+                        if (parts.length == 2) {
+                            String groupName = parts[1];
+                            ctx.writeAndFlush(new GroupJoinRequestMessage(groupName, ClientSession.getUsername()));
+                            showMenu();
+                            printPrompt();
+                        } else {
+                            showMenu();
+                            System.out.println("加入群聊命令格式错误，请使用: gjoin <group_name>");
                             printPrompt();
                         }
                         break;

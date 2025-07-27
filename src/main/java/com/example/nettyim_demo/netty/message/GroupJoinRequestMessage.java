@@ -8,7 +8,7 @@ import lombok.AllArgsConstructor;
 public class GroupJoinRequestMessage extends Message {
     private String groupName; // 群组名称
     private String username;  // 用户名
-    private String timestamp; // 加入时间戳
+    // private String timestamp; // 加入时间戳
 
     @Override
     public int getMessageType() {

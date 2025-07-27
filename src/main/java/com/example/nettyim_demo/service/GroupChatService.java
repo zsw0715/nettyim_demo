@@ -31,5 +31,14 @@ public interface GroupChatService {
      */
     boolean saveGroupMessage(String sender, String groupName, String content);
 
+    /**
+     * 添加成员到群聊
+     * 
+     * @param groupName 群名称
+     * @param member    成员用户名
+     * @return 是否添加成功
+     */
+    boolean addMemberToGroup(String groupName, String member);
+
 
 }

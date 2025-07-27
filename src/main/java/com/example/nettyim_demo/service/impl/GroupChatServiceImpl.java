@@ -108,6 +108,27 @@ public class GroupChatServiceImpl implements GroupChatService {
         return groupChatMessageMapper.insert(groupChatMessage) > 0;
     }
 
+    @Override
+    public boolean addMemberToGroup(String groupName, String member) {
+        if (groupName == null || groupName.isEmpty() || member == null || member.isEmpty()) {
+            throw new IllegalArgumentException("群名称和成员不能为空");
+        }
+
+        // 检查群是否存在
+        GroupInfo groupInfo = groupInfoMapper.findByGroupName(groupName);
+        if (groupInfo == null) {
+            return false; // 群不存在
+        }
+
+        // 添加成员到 group_member 表
+        GroupMember groupMember = new GroupMember();
+        groupMember.setGroupName(groupName);
+        groupMember.setUsername(member);
+        groupMember.setJoinTime(LocalDateTime.now());
+
+        return groupMemberMapper.insert(groupMember) > 0;
+    }
+
     
     
 }
