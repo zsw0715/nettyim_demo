@@ -28,4 +28,16 @@ public class GroupCreateResponseMessage extends AbstractResponseMessage {
         return MessageType.GROUP_CREATE_RESPONSE_MESSAGE;
     }
 
+    @Override
+    public String toString() {
+        return "GroupCreateResponseMessage{" +
+                "success=" + isSuccess() +
+                ", reason='" + getReason() + '\'' +
+                ", groupName='" + groupName + '\'' +
+                ", creator='" + creator + '\'' +
+                ", members=" + members +
+                ", timestamp='" + timestamp + '\'' +
+                '}';
+    }
+
 }

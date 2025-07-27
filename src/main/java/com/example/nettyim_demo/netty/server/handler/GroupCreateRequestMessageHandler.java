@@ -43,7 +43,7 @@ public class GroupCreateRequestMessageHandler extends SimpleChannelInboundHandle
             return;
         }
 
-        boolean saved = groupChatService.createGroup(groupName, creator);
+        boolean saved = groupChatService.createGroup(groupName, creator, members);
         if (!saved) {
             log.debug("启动！", "saved {}", saved);
             ctx.writeAndFlush(new GroupCreateResponseMessage(false, "群组保存数据库失败"));

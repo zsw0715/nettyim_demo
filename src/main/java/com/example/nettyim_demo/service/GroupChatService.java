@@ -1,5 +1,7 @@
 package com.example.nettyim_demo.service;
 
+import java.util.Set;
+
 public interface GroupChatService {
 
     /**
@@ -8,7 +10,7 @@ public interface GroupChatService {
      * @param groupName 群名称
      * @return 是否创建成功
      */
-    boolean createGroup(String groupName, String creator);
+    boolean createGroup(String groupName, String creator, Set<String> members);
 
     /**
      * 创建群聊并返回群ID
@@ -17,7 +19,7 @@ public interface GroupChatService {
      * @param creator   创建者
      * @return 群ID
      */
-    Long createGroupAndGetGid(String groupName, String creator);
+    Long createGroupAndGetGid(String groupName, String creator, Set<String> members);
 
 
 }
