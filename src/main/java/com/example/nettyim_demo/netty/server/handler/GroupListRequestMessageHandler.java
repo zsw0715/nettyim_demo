@@ -25,7 +25,13 @@ public class GroupListRequestMessageHandler extends SimpleChannelInboundHandler<
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, GroupListRequestMessage msg) throws Exception {
-        Map<String, Set<String>> groupNamesWithMembers = groupSession.getAllGroupNamesWithGroupMembers();
+        String username = msg.getUsername();
+        if (username == null || username.isEmpty()) {
+            log.debug("用户名不能为空");
+            ctx.writeAndFlush(new GroupListResponseMessage(false, "用户名不能为空"));
+            return;
+        }
+        Map<String, Set<String>> groupNamesWithMembers = groupSession.getAllGroupNamesWithGroupMembersLimitedByUserName(username);
         if (groupNamesWithMembers.isEmpty()) {
             log.debug("没有可用的群聊");
             ctx.writeAndFlush(new GroupListResponseMessage(true, "当前没有可用的群聊"));

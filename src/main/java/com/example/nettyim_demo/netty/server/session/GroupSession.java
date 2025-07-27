@@ -59,11 +59,19 @@ public interface GroupSession {
     boolean destroyGroup(String groupName);
 
     /**
-     * 获取所有群聊名称及其成员
+     * 获取所有群聊名称及其成员 -- 这个是管理员获取所有群聊的，普通用户无法获取，所以 demo1 没用
      *
      * @return 群聊名称及其成员集合
      */
     Map<String, Set<String>> getAllGroupNamesWithGroupMembers();
+
+    /**
+     * 获取当前用户所在的所有群聊名称及其成员
+     *
+     * @param username 用户名
+     * @return 群聊名称及其成员集合
+     */
+    Map<String, Set<String>> getAllGroupNamesWithGroupMembersLimitedByUserName(String username);
 
 
 

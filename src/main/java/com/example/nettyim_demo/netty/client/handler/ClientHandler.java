@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
 
+import org.springframework.boot.autoconfigure.integration.IntegrationProperties.RSocket.Client;
+
 import com.example.nettyim_demo.netty.client.session.ClientSession;
 import com.example.nettyim_demo.netty.message.ChatRequestMessage;
 import com.example.nettyim_demo.netty.message.GroupCreateRequestMessage;
@@ -109,7 +111,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
                         break;
                     case "glist":
                         if (parts.length == 1) {
-                            ctx.writeAndFlush(new GroupListRequestMessage());
+                            ctx.writeAndFlush(new GroupListRequestMessage(ClientSession.getUsername()));
                             showMenu();
                             printPrompt();
                         } else {

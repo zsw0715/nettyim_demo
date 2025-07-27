@@ -1,5 +1,6 @@
 package com.example.nettyim_demo.netty.server.session.impl;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -20,6 +21,9 @@ import io.netty.channel.Channel;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * 群聊会话实现类，使用内存存储群聊信息，后来改为了让SpringBoot自动注入，在demo2中需要把session从工厂类也改为SpringBoot自动注入，并结合redis实现分布式会话和缓存
+ */
 @Slf4j
 @Component
 public class GroupSessionMemoryImpl implements GroupSession {
@@ -106,6 +110,19 @@ public class GroupSessionMemoryImpl implements GroupSession {
     @Override
     public Map<String, Set<String>> getAllGroupNamesWithGroupMembers() {
         return Map.copyOf(groupMembersMap);
+    }
+
+    @Override
+    public Map<String, Set<String>> getAllGroupNamesWithGroupMembersLimitedByUserName(String username) {
+        Map<String, Set<String>> result = new HashMap<>();
+        for (Map.Entry<String, Set<String>> entry : groupMembersMap.entrySet()) {
+            String groupName = entry.getKey();
+            Set<String> members = entry.getValue();
+            if (members.contains(username)) {
+                result.put(groupName, members);
+            }
+        }
+        return result;
     }
 
 }
