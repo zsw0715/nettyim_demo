@@ -25,6 +25,8 @@ public class MessageTypeManager {
         messageTypeMap.put(MessageType.GROUP_LEAVE_RESPONSE_MESSAGE, GroupLeaveResponseMessage.class);
         messageTypeMap.put(MessageType.GROUP_MEMBER_LIST_REQUEST_MESSAGE, GroupMemberListRequestMessage.class);
         messageTypeMap.put(MessageType.GROUP_MEMBER_LIST_RESPONSE_MESSAGE, GroupMemberListResponseMessage.class);
+        messageTypeMap.put(MessageType.GROUP_LIST_REQUEST_MESSAGE, GroupListRequestMessage.class);
+        messageTypeMap.put(MessageType.GROUP_LIST_RESPONSE_MESSAGE, GroupListResponseMessage.class);
         messageTypeMap.put(MessageType.HEARTBEAT_REQUEST_MESSAGE, HeartbeatRequestMessage.class);
         messageTypeMap.put(MessageType.HEARTBEAT_RESPONSE_MESSAGE, HeartbeatResponseMessage.class);
     }
