@@ -41,6 +41,7 @@ public class ChatRequestMessageHandler extends SimpleChannelInboundHandler<ChatR
         } else {
             // 将消息发送给接收者
             receiverChannel.writeAndFlush(new ChatResponseMessage(true, "发送成功", sender, receiver, content, String.valueOf(System.currentTimeMillis())));
+            ctx.writeAndFlush(new ChatResponseMessage(true, "消息已发送给 " + receiver, sender, receiver, content, String.valueOf(System.currentTimeMillis())));
         }
         chatService.saveMessage(sender, receiver, content);
 

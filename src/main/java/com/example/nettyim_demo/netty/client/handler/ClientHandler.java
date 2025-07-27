@@ -1,12 +1,17 @@
 package com.example.nettyim_demo.netty.client.handler;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Scanner;
 // import java.util.concurrent.CountDownLatch;
+import java.util.Set;
 
 import com.example.nettyim_demo.netty.message.ChatRequestMessage;
+import com.example.nettyim_demo.netty.message.GroupCreateRequestMessage;
 import com.example.nettyim_demo.netty.message.LoginRequestMessage;
 import com.example.nettyim_demo.netty.message.LogoutRequestMessage;
 import com.example.nettyim_demo.netty.message.RegisterRequestMessage;
+import com.example.nettyim_demo.netty.server.session.SessionFactory;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -90,6 +95,22 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
                             printPrompt();
                         }
                         break;
+                    case "gcreate":
+                        if (parts.length < 3) {
+                            showMenu();
+                            System.out.println("创建群聊命令格式错误，请使用: gcreate <group_name> <u1,u2,...>");
+                            printPrompt();
+                        } else {
+                            String groupName = parts[1];
+                            String[] members = parts[2].split(",");
+                            Set<String> memberSet = new HashSet<>(List.of(members));
+                            String self = SessionFactory.getSession().getUsername(ctx.channel());
+                            memberSet.add(self);
+                            log.debug("Creating group '{}' with members: {}", groupName, memberSet);
+                            // ctx.writeAndFlush(new GroupCreateRequestMessage(groupName, memberSet));
+                            showMenu();
+                            printPrompt();
+                        }
                     default:
                         showMenu();
                         System.out.println("未知命令，请重新输入！");
@@ -130,9 +151,10 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
         System.out.println("│   7. gleave   <group>               退出群聊  │");
         System.out.println("│   8. gsend    <group> <message>     群发消息  │");
         System.out.println("│   9. gmembers <group>               查看群成员│");
+        System.out.println("│  10. glist                          查看所有群│");
         System.out.println("├───────────────────────────────────────────────┤");
         System.out.println("│ ❌ 系统命令：                                 │");
-        System.out.println("│  10. quit                           退出客户端│");
+        System.out.println("│  11. quit                           退出客户端│");
         System.out.println("└───────────────────────────────────────────────┘");
         System.out.println(">>> 请输入命令: ");
     }
