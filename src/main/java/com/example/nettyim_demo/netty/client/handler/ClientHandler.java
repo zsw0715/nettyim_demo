@@ -13,6 +13,7 @@ import com.example.nettyim_demo.netty.message.GroupAllRequestMessage;
 import com.example.nettyim_demo.netty.message.GroupChatRequestMessage;
 import com.example.nettyim_demo.netty.message.GroupCreateRequestMessage;
 import com.example.nettyim_demo.netty.message.GroupJoinRequestMessage;
+import com.example.nettyim_demo.netty.message.GroupLeaveRequestMessage;
 import com.example.nettyim_demo.netty.message.GroupListRequestMessage;
 import com.example.nettyim_demo.netty.message.GroupMemberListRequestMessage;
 import com.example.nettyim_demo.netty.message.LoginRequestMessage;
@@ -192,6 +193,23 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
                             System.out.println("加入群聊命令格式错误，请使用: gjoin <group_name>");
                             printPrompt();
                         }
+                        break;
+                    case "gleave":
+                        if (parts.length == 2) {
+                            String groupName = parts[1];
+                            ctx.writeAndFlush(new GroupLeaveRequestMessage(groupName, ClientSession.getUsername()));
+                            showMenu();
+                            printPrompt();
+                        } else {
+                            showMenu();
+                            System.out.println("退出群聊命令格式错误，请使用: gleave <group_name>");
+                            printPrompt();
+                        }
+                        break;
+                    case "quit":
+                        ctx.writeAndFlush(new LogoutRequestMessage(ClientSession.getUsername()));
+                        ctx.close();
+                        System.exit(0);
                         break;
                     default:
                         showMenu();

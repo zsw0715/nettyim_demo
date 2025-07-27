@@ -129,6 +129,23 @@ public class GroupChatServiceImpl implements GroupChatService {
         return groupMemberMapper.insert(groupMember) > 0;
     }
 
+    @Override
+    public boolean removeMemberFromGroup(String groupName, String member) {
+        if (groupName == null || groupName.isEmpty() || member == null || member.isEmpty()) {
+            throw new IllegalArgumentException("群名称和成员不能为空");
+        }
+
+        // 检查群是否存在
+        GroupInfo groupInfo = groupInfoMapper.findByGroupName(groupName);
+        if (groupInfo == null) {
+            return false; // 群不存在
+        }
+
+        // 从 group_member 表中删除成员
+        int result = groupMemberMapper.deleteByGroupNameAndUsername(groupName, member);
+        return result > 0;
+    }
+
     
     
 }

@@ -12,6 +12,7 @@ import com.example.nettyim_demo.netty.server.handler.GroupAllRequestMessageHandl
 import com.example.nettyim_demo.netty.server.handler.GroupChatRequestMessageHandler;
 import com.example.nettyim_demo.netty.server.handler.GroupCreateRequestMessageHandler;
 import com.example.nettyim_demo.netty.server.handler.GroupJoinRequestMessageHandler;
+import com.example.nettyim_demo.netty.server.handler.GroupLeaveRequestMessageHandler;
 import com.example.nettyim_demo.netty.server.handler.GroupListRequestMessageHandler;
 import com.example.nettyim_demo.netty.server.handler.GroupMemberListRequestMessageHandler;
 import com.example.nettyim_demo.netty.server.handler.LoginRequestMessageHandler;
@@ -113,6 +114,9 @@ public class NettyServer implements CommandLineRunner {
     @Autowired
     private GroupAllRequestMessageHandler groupAllRequestMessageHandler;
 
+    @Autowired
+    private GroupLeaveRequestMessageHandler groupLeaveRequestMessageHandler;
+
     @Override
     public void run(String... args) throws Exception {
         NioEventLoopGroup bossGroup = new NioEventLoopGroup();
@@ -137,6 +141,7 @@ public class NettyServer implements CommandLineRunner {
                             ch.pipeline().addLast(groupChatRequestMessageHandler);
                             ch.pipeline().addLast(groupJoinRequestMessageHandler);
                             ch.pipeline().addLast(groupAllRequestMessageHandler);
+                            ch.pipeline().addLast(groupLeaveRequestMessageHandler);
                         }
                     });
 

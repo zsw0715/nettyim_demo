@@ -40,5 +40,14 @@ public interface GroupChatService {
      */
     boolean addMemberToGroup(String groupName, String member);
 
+    /**
+     * 从群聊中移除成员
+     * 
+     * @param groupName 群名称
+     * @param member    成员用户名
+     * @return 是否移除成功
+     */
+    boolean removeMemberFromGroup(String groupName, String member);
+
 
 }
