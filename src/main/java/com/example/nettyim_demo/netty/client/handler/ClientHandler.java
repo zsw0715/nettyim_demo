@@ -10,7 +10,6 @@ import com.example.nettyim_demo.netty.message.ChatRequestMessage;
 import com.example.nettyim_demo.netty.message.GroupCreateRequestMessage;
 import com.example.nettyim_demo.netty.message.GroupListRequestMessage;
 import com.example.nettyim_demo.netty.message.LoginRequestMessage;
-import com.example.nettyim_demo.netty.message.LoginResponseMessage;
 import com.example.nettyim_demo.netty.message.LogoutRequestMessage;
 import com.example.nettyim_demo.netty.message.RegisterRequestMessage;
 
@@ -26,16 +25,6 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
         String response = msg.toString();
         log.debug("Received response from server: {}", response);
 
-        if (msg instanceof LoginResponseMessage) {
-            LoginResponseMessage loginResponse = (LoginResponseMessage) msg;
-            if (loginResponse.isSuccess()) {
-                ClientSession.setUsername(loginResponse.getUsername());
-                log.debug("用户记录设置成功: {}", loginResponse.getUsername());
-            } else {
-                log.debug("Login failed: {}", loginResponse.getReason());
-            }
-        }
-        
         // 显示下一轮输入提示
         printPrompt();
     }

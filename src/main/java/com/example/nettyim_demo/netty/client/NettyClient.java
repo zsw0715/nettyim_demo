@@ -1,6 +1,8 @@
 package com.example.nettyim_demo.netty.client;
 
 import com.example.nettyim_demo.netty.client.handler.ClientHandler;
+import com.example.nettyim_demo.netty.client.handler.GroupListResponseMessageHandler;
+import com.example.nettyim_demo.netty.client.handler.LoginResponseMessageHandler;
 import com.example.nettyim_demo.netty.protocol.MessageCodecSharable;
 import com.example.nettyim_demo.netty.protocol.ProtocolFramerDecoder;
 
@@ -34,7 +36,8 @@ public class NettyClient {
                             ch.pipeline().addLast(new ProtocolFramerDecoder());
                             // ch.pipeline().addLast(LOGGING_HANDLER);
                             ch.pipeline().addLast(MESSAGE_CODEC);
-                            // Add other handlers as needed, e.g., for login, message handling, etc.
+                            ch.pipeline().addLast("LoginResponseHandler", new LoginResponseMessageHandler());
+                            ch.pipeline().addLast("GroupListResponseHandler", new GroupListResponseMessageHandler());
                             ch.pipeline().addLast("ClientHandler", new ClientHandler());
                         }
                     });
