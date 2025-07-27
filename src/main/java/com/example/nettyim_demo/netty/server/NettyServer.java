@@ -1,5 +1,7 @@
 package com.example.nettyim_demo.netty.server;
 
+import java.util.concurrent.TimeUnit;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -15,6 +17,7 @@ import com.example.nettyim_demo.netty.server.handler.GroupJoinRequestMessageHand
 import com.example.nettyim_demo.netty.server.handler.GroupLeaveRequestMessageHandler;
 import com.example.nettyim_demo.netty.server.handler.GroupListRequestMessageHandler;
 import com.example.nettyim_demo.netty.server.handler.GroupMemberListRequestMessageHandler;
+import com.example.nettyim_demo.netty.server.handler.HeartbeatHandler;
 import com.example.nettyim_demo.netty.server.handler.LoginRequestMessageHandler;
 import com.example.nettyim_demo.netty.server.handler.LogoutRequestMessageHandler;
 import com.example.nettyim_demo.netty.server.handler.RegisterRequestMessageHandler;
@@ -27,6 +30,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
+import io.netty.handler.timeout.IdleStateHandler;
 import lombok.extern.slf4j.Slf4j;
 
 // @Slf4j
@@ -117,6 +121,9 @@ public class NettyServer implements CommandLineRunner {
     @Autowired
     private GroupLeaveRequestMessageHandler groupLeaveRequestMessageHandler;
 
+    @Autowired
+    private HeartbeatHandler heartbeatHandler;
+
     @Override
     public void run(String... args) throws Exception {
         NioEventLoopGroup bossGroup = new NioEventLoopGroup();
@@ -142,6 +149,9 @@ public class NettyServer implements CommandLineRunner {
                             ch.pipeline().addLast(groupJoinRequestMessageHandler);
                             ch.pipeline().addLast(groupAllRequestMessageHandler);
                             ch.pipeline().addLast(groupLeaveRequestMessageHandler);
+                            // 如果客户端 15 秒内没有发送任何数据，触发 IdleStateEvent，走到下一个 handler（HeartbeatHandler）
+                            ch.pipeline().addLast(new IdleStateHandler(15, 0, 0, TimeUnit.SECONDS));
+                            ch.pipeline().addLast(heartbeatHandler);
                         }
                     });
 

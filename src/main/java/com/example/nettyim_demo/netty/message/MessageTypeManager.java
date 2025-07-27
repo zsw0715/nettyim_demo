@@ -29,8 +29,7 @@ public class MessageTypeManager {
         messageTypeMap.put(MessageType.GROUP_LIST_RESPONSE_MESSAGE, GroupListResponseMessage.class);
         messageTypeMap.put(MessageType.GROUP_ALL_REQUEST_MESSAGE, GroupAllRequestMessage.class);
         messageTypeMap.put(MessageType.GROUP_ALL_RESPONSE_MESSAGE, GroupAllResponseMessage.class);
-        messageTypeMap.put(MessageType.HEARTBEAT_REQUEST_MESSAGE, HeartbeatRequestMessage.class);
-        messageTypeMap.put(MessageType.HEARTBEAT_RESPONSE_MESSAGE, HeartbeatResponseMessage.class);
+        messageTypeMap.put(MessageType.PING_MESSAGE, PingMessage.class);
     }
 
     public static Class<? extends Message> getMessageClass(int messageType) {
