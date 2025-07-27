@@ -1,5 +1,6 @@
 package com.example.nettyim_demo.netty.server.session;
 
+import java.util.Map;
 import java.util.Set;
 
 import io.netty.channel.Channel;
@@ -56,5 +57,14 @@ public interface GroupSession {
      * @return 是否解散成功
      */
     boolean destroyGroup(String groupName);
+
+    /**
+     * 获取所有群聊名称及其成员
+     *
+     * @return 群聊名称及其成员集合
+     */
+    Map<String, Set<String>> getAllGroupNamesWithGroupMembers();
+
+
 
 }

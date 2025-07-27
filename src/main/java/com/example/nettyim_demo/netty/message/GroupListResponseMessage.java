@@ -1,5 +1,6 @@
 package com.example.nettyim_demo.netty.message;
 
+import java.util.Map;
 import java.util.Set;
 
 import lombok.Data;
@@ -7,15 +8,15 @@ import lombok.Data;
 @Data
 public class GroupListResponseMessage extends AbstractResponseMessage {
     
-    private Set<String> groupNames; // 群组名称列表
+    private Map<String, Set<String>> groups;
 
     public GroupListResponseMessage(boolean success, String reason) {
         super(success, reason);
     }
 
-    public GroupListResponseMessage(boolean success, String reason, Set<String> groupNames) {
+    public GroupListResponseMessage(boolean success, String reason, Map<String, Set<String>> groups) {
         super(success, reason);
-        this.groupNames = groupNames;
+        this.groups = groups;
     }
 
     @Override
@@ -28,7 +29,7 @@ public class GroupListResponseMessage extends AbstractResponseMessage {
         return "GroupListResponseMessage{" +
                 "success=" + isSuccess() +
                 ", reason='" + getReason() + '\'' +
-                ", groupNames=" + groupNames +
+                ", groups=" + groups +
                 '}';
     }
 

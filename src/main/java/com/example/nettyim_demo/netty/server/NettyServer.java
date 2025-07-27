@@ -8,6 +8,7 @@ import com.example.nettyim_demo.netty.protocol.MessageCodecSharable;
 import com.example.nettyim_demo.netty.protocol.ProtocolFramerDecoder;
 import com.example.nettyim_demo.netty.server.handler.ChatRequestMessageHandler;
 import com.example.nettyim_demo.netty.server.handler.GroupCreateRequestMessageHandler;
+import com.example.nettyim_demo.netty.server.handler.GroupListRequestMessageHandler;
 import com.example.nettyim_demo.netty.server.handler.LoginRequestMessageHandler;
 import com.example.nettyim_demo.netty.server.handler.LogoutRequestMessageHandler;
 import com.example.nettyim_demo.netty.server.handler.RegisterRequestMessageHandler;
@@ -37,7 +38,7 @@ import lombok.extern.slf4j.Slf4j;
 //         MessageCodecSharable messageCodec = new MessageCodecSharable();
 //         ProtocolFramerDecoder protocolFramerDecoder = new ProtocolFramerDecoder();
 //         // 自定义处理器
-        
+
 //         try {
 //             ServerBootstrap serverBootstrap = new ServerBootstrap()
 //                     .group(bossGroup, workerGroup)
@@ -75,6 +76,9 @@ import lombok.extern.slf4j.Slf4j;
 public class NettyServer implements CommandLineRunner {
 
     @Autowired
+    private MessageCodecSharable messageCodec;
+
+    @Autowired
     private RegisterRequestMessageHandler registerHandler;
 
     @Autowired
@@ -90,13 +94,9 @@ public class NettyServer implements CommandLineRunner {
     private GroupCreateRequestMessageHandler groupCreateHandler;
 
     @Autowired
-    private MessageCodecSharable messageCodec;
+    private GroupListRequestMessageHandler groupListHandler;
 
-    // @Autowired
-    // private ProtocolFramerDecoder protocolFramerDecoder;
-
-    @Override
-    public void run(String... args) throws Exception {
+    @Override public void run(String... args) throws Exception {
         NioEventLoopGroup bossGroup = new NioEventLoopGroup();
         NioEventLoopGroup workerGroup = new NioEventLoopGroup();
 
@@ -113,7 +113,8 @@ public class NettyServer implements CommandLineRunner {
                             ch.pipeline().addLast(loginHandler);
                             ch.pipeline().addLast(logoutHandler);
                             ch.pipeline().addLast(chatHandler);
-                            ch.pipeline().addLast(groupCreateHandler); // ✅ Spring 注入的 handler
+                            ch.pipeline().addLast(groupCreateHandler);
+                            ch.pipeline().addLast(groupListHandler);
                         }
                     });
 

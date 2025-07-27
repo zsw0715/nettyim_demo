@@ -103,4 +103,9 @@ public class GroupSessionMemoryImpl implements GroupSession {
         return groupMembersMap.remove(groupName) != null;
     }
 
+    @Override
+    public Map<String, Set<String>> getAllGroupNamesWithGroupMembers() {
+        return Map.copyOf(groupMembersMap);
+    }
+
 }

@@ -8,6 +8,7 @@ import java.util.Set;
 import com.example.nettyim_demo.netty.client.session.ClientSession;
 import com.example.nettyim_demo.netty.message.ChatRequestMessage;
 import com.example.nettyim_demo.netty.message.GroupCreateRequestMessage;
+import com.example.nettyim_demo.netty.message.GroupListRequestMessage;
 import com.example.nettyim_demo.netty.message.LoginRequestMessage;
 import com.example.nettyim_demo.netty.message.LoginResponseMessage;
 import com.example.nettyim_demo.netty.message.LogoutRequestMessage;
@@ -34,10 +35,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
                 log.debug("Login failed: {}", loginResponse.getReason());
             }
         }
-
-        // 输出响应信息（可以改成更友好格式）
-        // System.out.println(response);
-
+        
         // 显示下一轮输入提示
         printPrompt();
     }
@@ -120,7 +118,17 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
                             printPrompt();
                         }
                         break;
-                    
+                    case "glist":
+                        if (parts.length == 1) {
+                            ctx.writeAndFlush(new GroupListRequestMessage());
+                            showMenu();
+                            printPrompt();
+                        } else {
+                            showMenu();
+                            System.out.println("查看所有群命令格式错误，请使用: glist");
+                            printPrompt();
+                        }
+                        break;
                     default:
                         showMenu();
                         System.out.println("未知命令，请重新输入！");
