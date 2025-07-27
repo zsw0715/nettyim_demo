@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.integration.IntegrationProperties.
 
 import com.example.nettyim_demo.netty.client.session.ClientSession;
 import com.example.nettyim_demo.netty.message.ChatRequestMessage;
+import com.example.nettyim_demo.netty.message.GroupChatRequestMessage;
 import com.example.nettyim_demo.netty.message.GroupCreateRequestMessage;
 import com.example.nettyim_demo.netty.message.GroupListRequestMessage;
 import com.example.nettyim_demo.netty.message.GroupMemberListRequestMessage;
@@ -130,6 +131,40 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
                         } else {
                             showMenu();
                             System.out.println("查看群成员命令格式错误，请使用: gmembers <group_name>");
+                            printPrompt();
+                        }
+                        break;
+                    case "gsend":
+                        if (parts.length < 3) {
+                            showMenu();
+                            System.out.println("群发消息命令格式错误，请使用: gsend <group_name> <message>");
+                            printPrompt();
+                        } else {
+                            String groupName = parts[1];
+                            String message = parts[2];
+                            String username = ClientSession.getUsername();
+                            if (groupName == null || groupName.isEmpty()) {
+                                showMenu();
+                                System.out.println("群组名称不能为空！");
+                                printPrompt();
+                                return;
+                            }
+                            if (message == null || message.isEmpty()) {
+                                showMenu();
+                                System.out.println("消息内容不能为空！");
+                                printPrompt();
+                                return;
+                            }
+                            if (username == null || username.isEmpty()) {
+                                showMenu();
+                                System.out.println("Client Session username 保存失败，请尝试重新登录！");
+                                printPrompt();
+                                return;
+                            }
+                            // 发送群聊消息
+                            log.debug("Sending group message to '{}' from '{}': {}", groupName, username, message);
+                            ctx.writeAndFlush(new GroupChatRequestMessage(username, groupName, message));
+                            showMenu();
                             printPrompt();
                         }
                         break;

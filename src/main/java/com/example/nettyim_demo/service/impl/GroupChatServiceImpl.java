@@ -7,8 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.nettyim_demo.entity.GroupChatMessage;
 import com.example.nettyim_demo.entity.GroupInfo;
 import com.example.nettyim_demo.entity.GroupMember;
+import com.example.nettyim_demo.mapper.GroupChatMessageMapper;
 import com.example.nettyim_demo.mapper.GroupInfoMapper;
 import com.example.nettyim_demo.mapper.GroupMemberMapper;
 import com.example.nettyim_demo.service.GroupChatService;
@@ -20,6 +22,8 @@ public class GroupChatServiceImpl implements GroupChatService {
     private GroupInfoMapper groupInfoMapper;
     @Autowired
     private GroupMemberMapper groupMemberMapper;
+    @Autowired
+    private GroupChatMessageMapper groupChatMessageMapper;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -87,6 +91,21 @@ public class GroupChatServiceImpl implements GroupChatService {
         }
 
         return groupInfo.getGid();
+    }
+
+    @Override
+    public boolean saveGroupMessage(String sender, String groupName, String content) {
+        if (sender == null || sender.isEmpty() || groupName == null || groupName.isEmpty() || content == null || content.isEmpty()) {
+            throw new IllegalArgumentException("发送者、群名称和消息内容不能为空");
+        }
+
+        GroupChatMessage groupChatMessage = new GroupChatMessage();
+        groupChatMessage.setSender(sender);
+        groupChatMessage.setGroupName(groupName);
+        groupChatMessage.setContent(content);
+        groupChatMessage.setSendTime(LocalDateTime.now());
+
+        return groupChatMessageMapper.insert(groupChatMessage) > 0;
     }
 
     

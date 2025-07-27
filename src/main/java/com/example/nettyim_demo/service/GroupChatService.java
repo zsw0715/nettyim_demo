@@ -21,5 +21,15 @@ public interface GroupChatService {
      */
     Long createGroupAndGetGid(String groupName, String creator, Set<String> members);
 
+    /**
+     * 保存群聊消息
+     * 
+     * @param sender   发送者
+     * @param groupName 群名称
+     * @param content   消息内容
+     * @return 是否保存成功
+     */
+    boolean saveGroupMessage(String sender, String groupName, String content);
+
 
 }
