@@ -11,6 +11,7 @@ import com.example.nettyim_demo.netty.client.session.ClientSession;
 import com.example.nettyim_demo.netty.message.ChatRequestMessage;
 import com.example.nettyim_demo.netty.message.GroupCreateRequestMessage;
 import com.example.nettyim_demo.netty.message.GroupListRequestMessage;
+import com.example.nettyim_demo.netty.message.GroupMemberListRequestMessage;
 import com.example.nettyim_demo.netty.message.LoginRequestMessage;
 import com.example.nettyim_demo.netty.message.LogoutRequestMessage;
 import com.example.nettyim_demo.netty.message.RegisterRequestMessage;
@@ -117,6 +118,18 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
                         } else {
                             showMenu();
                             System.out.println("查看所有群命令格式错误，请使用: glist");
+                            printPrompt();
+                        }
+                        break;
+                    case "gmembers":
+                        if (parts.length == 2) {
+                            String groupName = parts[1];
+                            ctx.writeAndFlush(new GroupMemberListRequestMessage(groupName));
+                            showMenu();
+                            printPrompt();
+                        } else {
+                            showMenu();
+                            System.out.println("查看群成员命令格式错误，请使用: gmembers <group_name>");
                             printPrompt();
                         }
                         break;
