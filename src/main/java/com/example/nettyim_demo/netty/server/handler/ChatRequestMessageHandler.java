@@ -1,23 +1,37 @@
 package com.example.nettyim_demo.netty.server.handler;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 // import com.example.nettyim_demo.entity.User;
 import com.example.nettyim_demo.netty.message.ChatRequestMessage;
 import com.example.nettyim_demo.netty.message.ChatResponseMessage;
+import com.example.nettyim_demo.netty.server.session.GroupSession;
 import com.example.nettyim_demo.netty.server.session.SessionFactory;
 import com.example.nettyim_demo.service.ChatService;
+import com.example.nettyim_demo.service.GroupChatService;
 import com.example.nettyim_demo.service.UserService;
 import com.example.nettyim_demo.util.SpringContextUtils;
 
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Component
+@ChannelHandler.Sharable
 public class ChatRequestMessageHandler extends SimpleChannelInboundHandler<ChatRequestMessage> {
 
-    private final ChatService chatService = SpringContextUtils.getBean(ChatService.class);
-    private final UserService userService = SpringContextUtils.getBean(UserService.class);
+    // private final ChatService chatService = SpringContextUtils.getBean(ChatService.class);
+    // private final UserService userService = SpringContextUtils.getBean(UserService.class);
+
+    @Autowired
+    private ChatService chatService;
+
+    @Autowired
+    private UserService userService;
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ChatRequestMessage msg) throws Exception {

@@ -1,17 +1,53 @@
 package com.example.nettyim_demo.netty.server.session.impl;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import com.example.nettyim_demo.entity.GroupInfo;
+import com.example.nettyim_demo.entity.GroupMember;
+import com.example.nettyim_demo.mapper.GroupInfoMapper;
+import com.example.nettyim_demo.mapper.GroupMemberMapper;
 import com.example.nettyim_demo.netty.server.session.GroupSession;
 import com.example.nettyim_demo.netty.server.session.SessionFactory;
 
 import io.netty.channel.Channel;
+import jakarta.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
+@Component
 public class GroupSessionMemoryImpl implements GroupSession {
 
     private static final Map<String, Set<String>> groupMembersMap = new ConcurrentHashMap<>();
+
+    @Autowired
+    private GroupInfoMapper groupInfoMapper;
+
+    @Autowired
+    private GroupMemberMapper groupMemberMapper;
+
+    /**
+     * 服务器启动时自动执行，把数据库里的 group -> member 加载进来
+     */
+    @PostConstruct
+    public void init() {
+        List<GroupInfo> groups = groupInfoMapper.selectList(null);
+        for (GroupInfo group : groups) {
+            String groupName = group.getGroupName();
+            List<GroupMember> members = groupMemberMapper.selectByGroupName(groupName);
+            Set<String> usernames = members.stream()
+                    .map(GroupMember::getUsername)
+                    .collect(Collectors.toSet());
+            groupMembersMap.put(groupName, usernames);
+        }
+        log.debug("群组成员初始化完成，共加载：{} 个群组", groupMembersMap.size());
+    }
 
     @Override
     public boolean createGroup(String groupName, Set<String> members) {

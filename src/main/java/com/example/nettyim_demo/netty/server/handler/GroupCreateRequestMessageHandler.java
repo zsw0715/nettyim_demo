@@ -2,23 +2,34 @@ package com.example.nettyim_demo.netty.server.handler;
 
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.example.nettyim_demo.netty.message.GroupCreateRequestMessage;
 import com.example.nettyim_demo.netty.message.GroupCreateResponseMessage;
 import com.example.nettyim_demo.netty.server.session.GroupSession;
-import com.example.nettyim_demo.netty.server.session.GroupSessionFactory;
+// import com.example.nettyim_demo.netty.server.session.GroupSessionFactory;
 import com.example.nettyim_demo.netty.server.session.SessionFactory;
 import com.example.nettyim_demo.service.GroupChatService;
 import com.example.nettyim_demo.util.SpringContextUtils;
 
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Component
+@ChannelHandler.Sharable
 public class GroupCreateRequestMessageHandler extends SimpleChannelInboundHandler<GroupCreateRequestMessage> {
 
-    private final GroupChatService groupChatService = SpringContextUtils.getBean(GroupChatService.class);
+    // private final GroupChatService groupChatService = SpringContextUtils.getBean(GroupChatService.class);
+    @Autowired
+    private GroupChatService groupChatService;
+
+    @Autowired
+    private GroupSession groupSession;
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, GroupCreateRequestMessage msg) throws Exception {
@@ -28,13 +39,6 @@ public class GroupCreateRequestMessageHandler extends SimpleChannelInboundHandle
 
         // 成功打印日志
         log.debug(creator + " 创建群组 " + groupName + " 成员：" + members + "你好！！");
-
-        GroupSession groupSession = GroupSessionFactory.getGroupSession();
-        // if (groupSession.getMembers(groupName) != null) {
-        // log.debug("原神");
-        // ctx.writeAndFlush(new GroupCreateResponseMessage(false, "群名已存在，请换一个"));
-        // return;
-        // }
 
         Set<String> existingMembers = groupSession.getMembers(groupName);
         if (!existingMembers.isEmpty()) {
@@ -52,11 +56,11 @@ public class GroupCreateRequestMessageHandler extends SimpleChannelInboundHandle
 
         log.debug("step 2!!!");
 
-        // 调用 GroupSessionFactory 创建群组
-        boolean success = GroupSessionFactory.getGroupSession().createGroup(groupName, members);
+        // 调用 GroupSession 创建群组
+        boolean success = groupSession.createGroup(groupName, members);
 
         // 获取群组成员的通道
-        Set<Channel> memberChannels = GroupSessionFactory.getGroupSession().getMemberChannels(groupName);
+        Set<Channel> memberChannels = groupSession.getMemberChannels(groupName);
 
         log.debug("step 3!!!");
         if (success) {

@@ -2,12 +2,15 @@ package com.example.nettyim_demo.netty.protocol;
 
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import com.example.nettyim_demo.netty.message.Message;
 import com.example.nettyim_demo.netty.message.MessageTypeManager;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageCodec;
+import lombok.extern.slf4j.Slf4j;
 import io.netty.channel.ChannelHandler;
 
 /**
@@ -25,6 +28,8 @@ import io.netty.channel.ChannelHandler;
  *
  * 本类将配合编码器/解码器（如 MessageCodec）进行编解码处理，作为 Netty 中消息传输的基础结构。
  */
+@Slf4j
+@Component
 @ChannelHandler.Sharable
 public class MessageCodecSharable extends MessageToMessageCodec<ByteBuf, Message> {
 

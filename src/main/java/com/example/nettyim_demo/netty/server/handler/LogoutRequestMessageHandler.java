@@ -1,18 +1,28 @@
 package com.example.nettyim_demo.netty.server.handler;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.example.nettyim_demo.netty.message.LogoutRequestMessage;
 import com.example.nettyim_demo.netty.message.LogoutResponseMessage;
 import com.example.nettyim_demo.netty.server.session.SessionFactory;
 import com.example.nettyim_demo.service.UserService;
 import com.example.nettyim_demo.util.SpringContextUtils;
 
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Component
+@ChannelHandler.Sharable
 public class LogoutRequestMessageHandler extends SimpleChannelInboundHandler<LogoutRequestMessage> {
 
-    private final UserService userService = SpringContextUtils.getBean(UserService.class);
+    // private final UserService userService = SpringContextUtils.getBean(UserService.class);
+
+    @Autowired
+    private UserService userService;
+
 
     @Override
     protected void channelRead0(io.netty.channel.ChannelHandlerContext ctx, LogoutRequestMessage msg) throws Exception {
