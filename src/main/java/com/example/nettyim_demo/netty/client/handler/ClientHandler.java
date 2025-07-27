@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.integration.IntegrationProperties.
 
 import com.example.nettyim_demo.netty.client.session.ClientSession;
 import com.example.nettyim_demo.netty.message.ChatRequestMessage;
+import com.example.nettyim_demo.netty.message.GroupAllRequestMessage;
 import com.example.nettyim_demo.netty.message.GroupChatRequestMessage;
 import com.example.nettyim_demo.netty.message.GroupCreateRequestMessage;
 import com.example.nettyim_demo.netty.message.GroupJoinRequestMessage;
@@ -123,6 +124,17 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
                             printPrompt();
                         }
                         break;
+                    case "gall":
+                        if (parts.length == 1) {
+                            ctx.writeAndFlush(new GroupAllRequestMessage());
+                            showMenu();
+                            printPrompt();
+                        } else {
+                            showMenu();
+                            System.out.println("查看所有群命令格式错误，请使用: gall");
+                            printPrompt();
+                        }
+                        break;
                     case "gmembers":
                         if (parts.length == 2) {
                             String groupName = parts[1];
@@ -218,13 +230,14 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
         System.out.println("│ 👥 群组功能：                                 │");
         System.out.println("│   5. gcreate  <group> <u1,u2,...>   创建群聊  │");
         System.out.println("│   6. glist                          查看所有群│");
-        System.out.println("│   7. gmembers <group>               查看群成员│");
-        System.out.println("│   8. gsend    <group> <message>     群发消息  │");
-        System.out.println("│   9. gjoin    <group>               加入群聊  │");
-        System.out.println("│  10. gleave   <group>               退出群聊  │");
+        System.out.println("│   7. gall                           查看数据库│");
+        System.out.println("│   8. gmembers <group>               查看群成员│");
+        System.out.println("│   9. gsend    <group> <message>     群发消息  │");
+        System.out.println("│  10. gjoin    <group>               加入群聊  │");
+        System.out.println("│  11. gleave   <group>               退出群聊  │");
         System.out.println("├───────────────────────────────────────────────┤");
         System.out.println("│ ❌ 系统命令：                                 │");
-        System.out.println("│  11. quit                           退出客户端│");
+        System.out.println("│  12. quit                           退出客户端│");
         System.out.println("└───────────────────────────────────────────────┘");
         System.out.println(">>> 请输入命令: ");
     }

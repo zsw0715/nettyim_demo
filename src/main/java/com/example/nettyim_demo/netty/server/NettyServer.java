@@ -4,9 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import com.example.nettyim_demo.netty.message.GroupAllRequestMessage;
 import com.example.nettyim_demo.netty.protocol.MessageCodecSharable;
 import com.example.nettyim_demo.netty.protocol.ProtocolFramerDecoder;
 import com.example.nettyim_demo.netty.server.handler.ChatRequestMessageHandler;
+import com.example.nettyim_demo.netty.server.handler.GroupAllRequestMessageHandler;
 import com.example.nettyim_demo.netty.server.handler.GroupChatRequestMessageHandler;
 import com.example.nettyim_demo.netty.server.handler.GroupCreateRequestMessageHandler;
 import com.example.nettyim_demo.netty.server.handler.GroupJoinRequestMessageHandler;
@@ -108,6 +110,9 @@ public class NettyServer implements CommandLineRunner {
     @Autowired
     private GroupJoinRequestMessageHandler groupJoinRequestMessageHandler;
 
+    @Autowired
+    private GroupAllRequestMessageHandler groupAllRequestMessageHandler;
+
     @Override
     public void run(String... args) throws Exception {
         NioEventLoopGroup bossGroup = new NioEventLoopGroup();
@@ -131,6 +136,7 @@ public class NettyServer implements CommandLineRunner {
                             ch.pipeline().addLast(groupMemberListRequestHandler);
                             ch.pipeline().addLast(groupChatRequestMessageHandler);
                             ch.pipeline().addLast(groupJoinRequestMessageHandler);
+                            ch.pipeline().addLast(groupAllRequestMessageHandler);
                         }
                     });
 
