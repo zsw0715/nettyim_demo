@@ -56,7 +56,7 @@ public class NettyClient {
             scheduler.scheduleAtFixedRate(() -> {
                 if (channel.isActive()) {
                     channel.writeAndFlush(new PingMessage());
-                    log.debug("Heartbeat sent.");
+                    // log.debug("Heartbeat sent.");
                 }
             }, 10, 10, TimeUnit.SECONDS);
 
