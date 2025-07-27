@@ -3,15 +3,15 @@ package com.example.nettyim_demo.netty.client.handler;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
-// import java.util.concurrent.CountDownLatch;
 import java.util.Set;
 
+import com.example.nettyim_demo.netty.client.session.ClientSession;
 import com.example.nettyim_demo.netty.message.ChatRequestMessage;
 import com.example.nettyim_demo.netty.message.GroupCreateRequestMessage;
 import com.example.nettyim_demo.netty.message.LoginRequestMessage;
+import com.example.nettyim_demo.netty.message.LoginResponseMessage;
 import com.example.nettyim_demo.netty.message.LogoutRequestMessage;
 import com.example.nettyim_demo.netty.message.RegisterRequestMessage;
-import com.example.nettyim_demo.netty.server.session.SessionFactory;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -20,15 +20,23 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ClientHandler extends ChannelInboundHandlerAdapter {
 
-    // CountDownLatch latch = new CountDownLatch(1);
-
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         String response = msg.toString();
         log.debug("Received response from server: {}", response);
 
+        if (msg instanceof LoginResponseMessage) {
+            LoginResponseMessage loginResponse = (LoginResponseMessage) msg;
+            if (loginResponse.isSuccess()) {
+                ClientSession.setUsername(loginResponse.getUsername());
+                log.debug("用户记录设置成功: {}", loginResponse.getUsername());
+            } else {
+                log.debug("Login failed: {}", loginResponse.getReason());
+            }
+        }
+
         // 输出响应信息（可以改成更友好格式）
-        System.out.println(response);
+        // System.out.println(response);
 
         // 显示下一轮输入提示
         printPrompt();
@@ -104,13 +112,14 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
                             String groupName = parts[1];
                             String[] members = parts[2].split(",");
                             Set<String> memberSet = new HashSet<>(List.of(members));
-                            String self = SessionFactory.getSession().getUsername(ctx.channel());
+                            String self = ClientSession.getUsername();
                             memberSet.add(self);
                             log.debug("Creating group '{}' with members: {}", groupName, memberSet);
-                            // ctx.writeAndFlush(new GroupCreateRequestMessage(groupName, memberSet));
+                            ctx.writeAndFlush(new GroupCreateRequestMessage(groupName, memberSet));
                             showMenu();
                             printPrompt();
                         }
+                        break;
                     default:
                         showMenu();
                         System.out.println("未知命令，请重新输入！");
